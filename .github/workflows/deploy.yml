@@ -1,0 +1,31 @@
+name: Build and Deploy Website
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # allow manual trigger
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run HTML validation (simulate CI)
+        uses: Cyb3r-Jak3/html5validator-action@v3.1.0
+        with:
+          root: "."
+
+      - name: Build website
+        run: |
+          mkdir dist
+          cp index.html dist/
+          cp style.css dist/
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
